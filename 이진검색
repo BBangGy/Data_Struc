@@ -1,0 +1,95 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 100000
+#define SWAP(x,y,t) ((t)=(x),(x)=(y),(y)=(t))
+#define compare(x,y) (((x)<(y))?-1:((x)==(y))?0:1)
+int binearSeach(int[], int, int, int);
+int is_sorted(int[],int);
+void sort(int[], int);
+void put_Array(int[], int);
+void revSwap(int[],int n);
+int main() {
+	int n,key,A[MAX],list[MAX];
+	n = MAX;
+	//1.3) 1부터 100000까지의 랜덤 정수.
+	for (int i = 0; i < n; i++) {
+		A[i] = (rand() % 100000)+1;
+	}
+	//정렬
+	sort(A, n);
+	//이진탐색함수를 사용하여 카운트를 표현.
+	for (int i = 120; i <= 130; i++) {
+		binearSeach(A, key = i, 0, n);
+	}
+	//1.4)역순정렬.
+	//n은 바꾸면된다.
+	put_Array(list, n = 100000);
+	revSwap(list, n);
+	//역순배열을 정렬.
+	sort(list, n);
+	//정렬이 잘됐는지 검사.
+	is_sorted(list, n);
+	for (int i = 1; i <= 100000; i *= 10) {
+		binearSeach(list, key = i, 0, n);
+	}
+}
+void revSwap(int list[],int n) {
+	for (int i = 0; i < n / 2; i++) {
+		int temp = list[i];
+		list[i] = list[n - i - 1];
+		list[n - i - 1] = temp;
+	}
+}
+void put_Array(int list[], int n) {
+	for (int i = 0; i < n; i++) {
+		list[i] = i+1;
+	}
+}
+void sort(int list[], int n) {
+	int min,temp;
+	for (int i = 0; i < n - 1; i++) {
+		min = i;
+		for (int j = i + 1; j < n; j++) {
+			if (list[j] < list[min]) {
+				min = j;
+	 		}
+		}
+		SWAP(list[i], list[min], temp);
+	}
+}
+int is_sorted(int list[], int n) {
+	int i;
+	for (i = 0; i < n; i++) {
+		if (list[i] <= list[i + 1]) {
+			printf("\n정렬 완료.\n");
+			return 1;
+		}
+		else {
+			return 0;
+		}
+	}
+}
+int binearSeach(int list[], int key, int left, int right) {
+	int middle;
+	int count = 0;
+	printf("검색 데이터 (1~100000) : %d\n",key);
+	while (left <= right) {
+		middle = (left + right) / 2;
+		switch (compare(list[middle], key))
+		{
+		case -1: 
+			left = middle + 1;
+			count++;
+			break;
+		case 0:
+			return printf("검색 데이터 : %6d, Counter : %d\n",key,count);
+		case 1: 
+			right = middle - 1;
+			count++;
+			break;
+		}
+		//count++; 이렇게 넣어도 된다.
+		//왜냐하면 while문을 돌때마다 나올수 있기 때문에.
+	}
+	return printf("검색 데이터 : %6d, Counter : %d\n", key, -1);
+}
