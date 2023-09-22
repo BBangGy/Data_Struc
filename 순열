@@ -1,0 +1,107 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#define SWAP(x,y,t) ((t)=(x),(x)=(y),(y)=(t))
+void perm(char* list, int, int);
+void perm2(int* list, int, int);
+void perm3(int* list, int, int);
+
+void perm(char* list, int i, int n) {
+	int j, temp;
+	if (i == n) {
+		for (j = 0; j <=n; j++) {
+			printf("%c", list[j]);
+		}
+		printf("\t");
+	}
+	else {
+		for (j = i; j <= n; j++) {
+			SWAP(list[i], list[j], temp);
+			perm(list, i + 1, n);
+			SWAP(list[i], list[j], temp);
+		}
+	}
+}
+void perm2(int* list, int i, int n) {
+	int j, temp;
+	if (i == n) {
+		for (j = 0; j <=n; j++) {
+			printf("%d", list[j]);
+		}
+		printf("\t");
+	}
+	else {
+		for (j = i; j <= n; j++) {
+			SWAP(list[i], list[j], temp);
+			perm2(list, i + 1, n);
+			SWAP(list[i], list[j], temp);
+		}
+	}
+}
+void perm3(int* list, int i, int n) {
+	int j, temp;
+	for (j = i; j <= n; j++) {
+		SWAP(list[i], list[j], temp);
+		perm3(list, i + 1, n);
+		SWAP(list[i], list[j], temp);
+	}
+}
+int main() {
+	char A[10];
+	int n;
+	clock_t start;
+	double duration;
+	printf("2.1 순열 알고리즘 호출\n");
+	for (int i = 0; i < 4; i++) {
+		printf("제시 문자열:");
+		scanf("%s", A);
+		perm(A, 0, strlen(A) - 1);
+		printf("\n");
+	}
+	printf("2.2\n");
+	printf("1부터 n사이의 숫자들을 이용한 출력.\n");
+	while (1) {
+		printf("입력: ");
+		scanf("%d", &n);
+		//동적으로 받기 위해 malloc을 사용하여 메모리 사용을 줄이기 위해 사용했다.
+		int* arr = (int*)malloc(n * sizeof(int));
+		if (n == -1) {
+			printf("종료\n");
+			break;
+		}
+		else if (n < 1 || n>32) {
+			printf("입력 범위(1~32)를 벗어났습니다.\n");
+		}
+		else {
+			start = clock();
+			for (int i = 0; i < n; i++) {
+				arr[i] = i;
+			}
+			perm2(arr, 0, n - 1);
+			free(arr);
+			duration = ((double)(clock() - start)) / CLOCKS_PER_SEC;
+			printf("\n실행시간: %.3f\n",duration);
+			printf("\n");
+		}
+	}
+	printf("2.3\n");
+	printf("순열 원소 개수를 변화시키면서 실행 시간 관찰\n");
+	int list1[10];
+	for (int i =0; i <10; i++) {
+		list1[i] = i;
+	}
+	for (int j = 0; j <5; j++) {
+		perm2(list1, 0, j);
+		printf("\n");
+	}
+	printf("....\t(중략)\n");
+	printf("원소갯수\t실행시간\n");
+	for (int i = 0; i < 10; i++) {
+		start = clock();
+		perm3(list1, 0, i);
+		printf("\n");
+		duration = ((double)(clock() - start)) / CLOCKS_PER_SEC;
+		printf("%d\t%.3f\n", i+1, duration);
+	}
+}
