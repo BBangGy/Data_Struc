@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#define MAX 100000
+#define SWAP(x,y,t) ((t)=(x),(x)=(y),(y)=(t))
+int is_sorted(int[], int);
+void sort(int[], int);
+void revSwap(int[], int n);
+int main() {
+	int A[MAX], n = MAX;
+	//1.1
+	printf("무작위 정수의 범위 1~100000\n");
+	for (int i = 0; i < MAX; i++) {
+		A[i] = (rand() % n)+1;
+	}
+	sort(A, n);
+	printf("정렬\n");
+	is_sorted(A, n);
+	//1.2
+	int list[MAX];
+	int temp,step=100;
+	double duration;
+	clock_t start;
+	//배열의 입력 정수 범위를 1부터 n까지.
+	for (int i =0 ; i < n; i++) {
+		list[i] = i+1;
+	}
+	//역순정렬.
+	revSwap(list, n);
+	sort(list, n);
+	//실행시간을 측정.
+	for (int j = 100; j <= n; j+= step) {
+		start = clock();
+		sort(list, j);
+		duration = ((double)(clock() - start)) / CLOCKS_PER_SEC;
+		printf("%6d		%f\n", j, duration);
+		if (j == 1000) {
+			step = 1000;
+		}
+		else if (j == 10000) {
+			step = 10000;
+		}
+		else if(j==100000){
+			step = 100000;
+		}
+	}
+}
+int is_sorted(int A[], int n) {
+	int i;
+	for (i = 0; i < n; i++) {
+		if (A[i] <= A[i + 1]) {
+			printf("\n정렬완료.\n");
+			return 1;
+		}
+		else {
+			return 0;
+		}
+	}
+}
+void sort(int list[], int n) {
+	int i, j, min, temp;
+	for (i = 0; i < n - 1; i++) {
+		min = i;
+		for (j = i + 1; j < n; j++) {
+			if (list[j] < list[min]) {
+				min = j;
+			}
+		}
+		SWAP(list[i], list[min], temp);
+	}
+}
+void revSwap(int list[], int n) {
+	for (int i = 0; i < n / 2; i++) {
+		int temp = list[i];
+		list[i] = list[n - i - 1];
+		list[n - i - 1] = temp;
+	}
+}
